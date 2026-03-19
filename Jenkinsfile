@@ -18,7 +18,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                cp target/*.war /opt/tomcat/webapps/
+                cp target/*.war /mnt/servers/apache-tomcat-10.1.52/webapps/
                 '''
             }
         }
