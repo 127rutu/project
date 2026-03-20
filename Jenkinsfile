@@ -15,10 +15,18 @@ pipeline {
             }
         }
 
-        stage('copying to slave') {
+        stage('Upload WAR to S3') {
             steps {
-               sh 'scp -i /root/.ssh/jenkins_key target/LoginWebApp.war ec2-user@172.31.34.9:/mnt/servers/apache-tomcat-10.1.52/webapps/'
+                sh 'aws s3 mb s3://assignment-9b-rutuja'
+                sh 'aws s3 cp /mnt/project/project/target/LoginWebApp.war s3://assignment-9b-rutuja/'
+            }
+        }
+
+        stage('Download from S3 to Slave & Deploy') {
+            steps {
+                sh 'aws s3 cp s3://assignment-9b-rutuja/LoginWebApp.war /mnt/jenkins-slave/LoginWebApp.war'
+                sh 'cp /mnt/jenkins-slave/LoginWebApp.war /mnt/servers/apache-tomcat-10.1.52/webapps/'
             }
         }
     }
-}
+}}
