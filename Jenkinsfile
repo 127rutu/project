@@ -17,7 +17,7 @@ pipeline {
 
         stage('copying to slave') {
             steps {
-                sh 'scp target/LoginWebApp.war ec2-user@172.31.34.9:/mnt/servers/apache-tomcat-10.1.52/webapps/'
+               sh 'scp -i /root/.ssh/jenkins_key target/LoginWebApp.war ec2-user@172.31.34.9:/mnt/servers/apache-tomcat-10.1.52/webapps/'
             }
         }
     }
