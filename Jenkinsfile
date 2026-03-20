@@ -15,7 +15,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to Slave') {
+        stage('Deploy to Ec2') {
             steps {
                 sh 'scp target/LoginWebApp.war root@172.31.44.246:/mnt/servers/apache-tomcat-10.1.52/webapps/'
                 
