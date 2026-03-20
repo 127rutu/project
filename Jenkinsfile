@@ -18,7 +18,7 @@ pipeline {
         stage('Upload WAR to S3') {
             steps {
                 sh 'aws s3 mb s3://assignment-9b-rutuja'
-                sh 'aws s3 cp /mnt/project/project/target/LoginWebApp.war s3://assignment-9b-rutuja/'
+                sh 'aws s3 cp target/LoginWebApp.war s3://assignment-9b-rutuja/'
             }
         }
 
