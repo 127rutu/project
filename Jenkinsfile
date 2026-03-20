@@ -15,25 +15,9 @@ pipeline {
             }
         }
 
-        stage('Archive Artifact') {
+        stage('copying to slave') {
             steps {
-                archiveArtifacts artifacts: '**/target/LoginWebApp.war', fingerprint: true
-            }
-        }
-
-        stage('Deploy to Slave-1') {
-            agent { label 'slave-1' }
-
-            steps {
-                copyArtifacts(
-                    projectName: env.JOB_NAME,
-                    selector: lastSuccessful(),
-                    filter: 'target/LoginWebApp.war'
-                )
-
-                sh '''
-                    cp target/LoginWebApp.war /mnt/servers/apache-tomcat-10.1.52/webapps/
-                '''
+                sh 'scp target/LoginWebApp.war ec2-user@172.31.34.9:/mnt/servers/apache-tomcat-10.1.52/webapps/'
             }
         }
     }
