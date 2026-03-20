@@ -1,39 +1,24 @@
 pipeline {
-    agent none  
+    agent { label 'built-in' }
 
     stages {
 
-        stage('Checkout & Build') {
-            agent { label 'built-in' } 
-
-            stages {
-                stage('Checkout') {
-                    steps {
-                        git 'https://github.com/127rutu/project.git'
-                    }
-                }
-
-                stage('Build') {
-                    steps {
-                        sh '/mnt/build-tools/apache-maven-3.9.14/bin/mvn clean install'
-                    }
-                }
-
-                stage('Upload WAR to S3') {
-                    steps {
-                        sh 'aws s3 mb s3://assignment-9b-rutuja '
-                        sh 'aws s3 cp target/LoginWebApp.war s3://assignment-9b-rutuja/'
-                    }
-                }
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/127rutu/project.git'
             }
         }
 
-        stage('Deploy on Slave') {
-            agent { label 'slave-1' }  
-
+        stage('Build') {
             steps {
-                sh 'aws s3 cp s3://assignment-9b-rutuja/LoginWebApp.war /mnt/jenkins-slave/LoginWebApp.war'
-                sh 'cp /mnt/jenkins-slave/LoginWebApp.war /mnt/servers/apache-tomcat-10.1.52/webapps/'
+                sh '/mnt/build-tools/apache-maven-3.9.14/bin/mvn clean install'
+            }
+        }
+
+        stage('Deploy to Slave') {
+            steps {
+                sh 'scp -i /root/.ssh/jenkins_key target/LoginWebApp.war ec2-user@172.31.44.246:/mnt/servers/apache-tomcat-10.1.52/webapps/'
+                sh 'ssh -i /root/.ssh/jenkins_key ec2-user@172.31.44.246 "sudo systemctl restart tomcat"'
             }
         }
     }
