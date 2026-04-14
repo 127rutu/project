@@ -1,47 +1,37 @@
-4qgrweadsvx
 pipeline {
-agent {
-label {
-		label "built-in-project"
-		customWorkspace "/data/project-myapp"
-		
-		}
-		}
-		
-	stages {
-		
-		stage ('CLEAN_OLD_M2') {
-			
-			steps {
-				sh "rm -rf /home/saccount/.m2/repository"
-				
-			}
-			
-		}
-	
-		stage ('MAVEN_BUILD') {
-		
-			steps {
-						
-						sh "mvn clean package"
-			
-			}
-			
-		
-		}
-		
-		stage ('COPY_WAR_TO_Server'){
-		
-				steps {
-						
-						sh "scp -r target/LoginWebApp.war saccount@10.0.2.51:/data/project/wars"
+    agent { label 'built-in' }
 
-						}
-				
-				}
-	
-	
-	
-	}
-		
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/127rutu/project.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Setup Database') {
+            steps {
+                sh '''
+                chmod -R 777 database.sh
+                ./database.sh
+                '''
+            }
+        }
+
+        stage('Copy to Slave') {
+            agent { label 'slave-1' }
+            steps {
+                sh '''
+                scp /mnt/project/project/target/LoginWebApp.war \
+                root@172.31.40.110:/mnt/servers/apache-tomcat-10.1.52/webapps
+                '''
+            }
+        }
+    }
 }
