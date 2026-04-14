@@ -12,6 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh '/mnt/build-tools/apache-maven-3.9.14/bin/mvn clean install'
+                stash includes: 'target/*.war', name: 'war-file'   // 👈 save artifact
             }
         }
 
@@ -28,9 +29,10 @@ pipeline {
             agent { label 'slave-1' }
 
             steps {
+                unstash 'war-file'   // 👈 bring WAR to slave
+
                 sh '''
-                    scp target/*.war
-                    root@172.31.35.143:/mnt/servers/apache-tomcat-10.1.52/webapps
+                    scp target/*.war root@172.31.35.143:/mnt/servers/apache-tomcat-10.1.52/webapps
                 '''
             }
         }
