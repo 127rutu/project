@@ -29,7 +29,7 @@ pipeline {
 
             steps {
                 sh '''
-                    scp ${WORKSPACE}/target/LoginWebApp.war \
+                    scp target/*.war
                     root@172.31.35.143:/mnt/servers/apache-tomcat-10.1.52/webapps
                 '''
             }
