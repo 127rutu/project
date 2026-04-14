@@ -28,7 +28,7 @@ pipeline {
             agent { label 'slave-1' }
             steps {
                 sh '''
-                scp /root/.jenkins/workspace/rds-1/target/LoginWebApp.war ec2-user@172.31.40.110:/mnt/servers/apache-tomcat-10.1.52/webapps
+                scp /root/.jenkins/workspace/rds-1/target/LoginWebApp.war root@172.31.40.110:/mnt/servers/apache-tomcat-10.1.52/webapps
                 '''
             }
         }
