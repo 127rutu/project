@@ -35,7 +35,7 @@ pipeline {
         stage('Deploy to Tomcat') {
             steps {
                 sh '''
-                    scp target/*.war root@172.31.35.143:/mnt/servers/apache-tomcat-10.1.52/webapps
+                    scp target/LoginWebApp.war root@172.31.35.143:/mnt/servers/apache-tomcat-10.1.54/webapps
                 '''
             }
         }
