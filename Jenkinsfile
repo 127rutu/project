@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'built-in' }
+    agent any
 
     stages {
 
@@ -11,24 +11,27 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh '/mnt/build-tools/apache-maven-3.9.14/bin/mvn clean install'
+                sh 'mvn clean install'
             }
         }
 
         stage('Setup Database') {
             steps {
                 sh '''
-                chmod -R 777 database.sh
-                ./database.sh
+                    chmod -R 777 database.sh
+                    ./database.sh
                 '''
             }
         }
 
-        stage('Copy to Slave') {
+        stage('Copy WAR to Slave') {
             agent { label 'slave-1' }
+
             steps {
                 sh '''
-                scp /root/.jenkins/workspace/rds-1/target/LoginWebApp.war root@172.31.40.110:/mnt/servers/apache-tomcat-10.1.52/webapps
+                    scp -o StrictHostKeyChecking=no \
+                    ${WORKSPACE}/target/LoginWebApp.war \
+                    root@172.31.40.110:/mnt/servers/apache-tomcat-10.1.52/webapps
                 '''
             }
         }
