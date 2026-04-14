@@ -11,7 +11,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean install'
+                sh '/mnt/build-tools/apache-maven-3.9.14/bin/mvn clean install'
             }
         }
 
