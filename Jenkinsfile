@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'built-in' }
 
     stages {
 
@@ -29,8 +29,7 @@ pipeline {
 
             steps {
                 sh '''
-                    scp -o StrictHostKeyChecking=no \
-                    ${WORKSPACE}/target/LoginWebApp.war \
+                    scp ${WORKSPACE}/target/LoginWebApp.war \
                     root@172.31.35.143:/mnt/servers/apache-tomcat-10.1.52/webapps
                 '''
             }
