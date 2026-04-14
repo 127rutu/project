@@ -28,7 +28,7 @@ pipeline {
             agent { label 'slave-1' }
             steps {
                 sh '''
-                scp /mnt/project/project/target/LoginWebApp.war \
+                scp /mnt/project/target/LoginWebApp.war \
                 root@172.31.40.110:/mnt/servers/apache-tomcat-10.1.52/webapps
                 '''
             }
