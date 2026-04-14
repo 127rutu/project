@@ -29,7 +29,7 @@ pipeline {
             steps {
                 sh '''
                 scp /mnt/project/target/LoginWebApp.war \
-                root@172.31.40.110:/mnt/servers/apache-tomcat-10.1.52/webapps
+                ec2-user@172.31.40.110:/mnt/servers/apache-tomcat-10.1.52/webapps
                 '''
             }
         }
